@@ -35,9 +35,9 @@ class ConversationAgent:
         )
 
 
-    def ask_llm(self, text_interaction):
+    def ask_llm(self, question):
 
-        self.update_conversation_history(role="user", content=text_interaction)
+        self.update_conversation_history(role="user", content=question)
 
         response = self.groq_client.chat.completions.create(
             messages=self.conversation_history,
@@ -45,39 +45,23 @@ class ConversationAgent:
             include_reasoning=False,
         ).choices[0].message.content
 
-
         self.update_conversation_history(role="assistant", content=response)
 
+        return response
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    def transcribe_audio(self, audio_file):
+        transcription = self.groq_client.audio.transcriptions.create(
+            file=(audio_file.name, audio_file.read()),
+            model="whisper-large-v3-turbo",
+            language="fr",
+        )
+        return transcription.text
 
 
 
 if __name__ == "__main__":
+    agent = ConversationAgent()
     question = input("Pose ta question :\n")
-    response = ask_llm(question)
+    response = agent.ask_llm(question)
     print("\n")
     print(response)

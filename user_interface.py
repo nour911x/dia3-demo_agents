@@ -1,4 +1,4 @@
-import streamlit as st 
+import streamlit as st
 from llm_agent import ConversationAgent
 
 
@@ -10,7 +10,7 @@ class UserInterface:
 
 
 	def get_persistant_conversation_agent(self):
-		
+
 		if "conversation_agent_object" not in st.session_state:
 			st.session_state.conversation_agent_object = ConversationAgent()
 
@@ -24,66 +24,22 @@ class UserInterface:
 
 
 	def run(self):
-		text_interaction = st.chat_input(
+		interaction = st.chat_input(
 			"Que veux tu moussaillon ?",
 			accept_file=False,
-			accept_audio=False
+			accept_audio=True
 			)
 
-		if text_interaction :
+		if interaction:
+			text_interaction = interaction.text
+
+			if interaction.audio:
+				text_interaction = self.conversation_agent_object.transcribe_audio(interaction.audio)
+
 			self.conversation_agent_object.ask_llm(text_interaction)
 			self.show_discussion_history()
-
 
 
 if __name__ == "__main__":
 	user_interface_object = UserInterface()
 	user_interface_object.run()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	# response = ask_llm(user_input)
-	# with st.chat_message("user"):
-	# 	st.markdown(user_input)
-
-	# with st.chat_message("system"):
-	# 	st.markdown(response)
-
-
