@@ -11,7 +11,7 @@ class ConversationAgent:
         self.conversation_history = [
                 {
                     "role": "system",
-                    "content": read_file(file_path="./context.txt")
+                    "content": self.read_file(file_path="./context.txt")
                 }
             ]
 
@@ -41,39 +41,14 @@ class ConversationAgent:
             include_reasoning=False,
         ).choices[0].message.content
 
-
         self.update_conversation_history(role="assistant", content=response)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return response
 
 
 if __name__ == "__main__":
+    agent = ConversationAgent()
     question = input("Pose ta question :\n")
-    response = ask_llm(question)
+    response = agent.ask_llm(question)
     print("\n")
     print(response)
